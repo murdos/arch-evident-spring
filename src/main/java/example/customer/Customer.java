@@ -15,7 +15,7 @@
  */
 package example.customer;
 
-import example.customer.Customer.CustomerIdentifier;
+import example.customer.Customer.CustomerId;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -27,16 +27,16 @@ import org.jmolecules.ddd.types.Identifier;
  * @author Oliver Drotbohm
  */
 @Getter
-public class Customer implements AggregateRoot<Customer, CustomerIdentifier> {
+public class Customer implements AggregateRoot<Customer, CustomerId> {
 
-	private final CustomerIdentifier id;
+	private final CustomerId id;
 	private final String address;
 
 	public Customer(String address) {
 
-		this.id = new CustomerIdentifier(UUID.randomUUID());
+		this.id = new CustomerId(UUID.randomUUID());
 		this.address = address;
 	}
 
-	public record CustomerIdentifier(UUID id) implements Identifier {}
+	public record CustomerId(UUID id) implements Identifier {}
 }

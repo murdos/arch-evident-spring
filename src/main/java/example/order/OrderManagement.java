@@ -15,32 +15,32 @@
  */
 package example.order;
 
-import example.customer.Customer.CustomerIdentifier;
 import example.inventory.Inventory;
+import example.notifications.NotificationService;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 
-import org.jmolecules.ddd.annotation.Service;
+import org.springframework.stereotype.Service;
 
-/**
- * @author Oliver Drotbohm
- */
-@Transactional
 @Service
-@RequiredArgsConstructor
 public class OrderManagement {
 
 	private final OrderRepository orders;
 	private final Inventory inventory;
+	private final NotificationService notificationService;
 
-	public Order create(CustomerIdentifier customerId) {
-		return new Order(customerId);
-	}
+    OrderManagement(OrderRepository orders, Inventory inventory, NotificationService notificationService) {
+        this.orders = orders;
+        this.inventory = inventory;
+        this.notificationService = notificationService;
+    }
 
-	public Order complete(Order order) {
+	@Transactional
+	public void complete(Order order) {
+		order.complete();
 
-		inventory.updateStock();
+		orders.save(order);
 
-		return orders.save(order.complete());
+		inventory.updateStock(order);
+		notificationService.sendPendingShipmentMail(order);
 	}
 }

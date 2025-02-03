@@ -15,24 +15,27 @@
  */
 package example.inventory;
 
-import lombok.RequiredArgsConstructor;
+import example.order.Order;
 
-import org.jmolecules.ddd.annotation.Service;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Oliver Drotbohm
  */
 @Service
-@RequiredArgsConstructor
 public class Inventory {
 
 	@SuppressWarnings("unused") //
 	private final InventoryRepository repository;
 
-	/**
+    Inventory(InventoryRepository repository) {
+        this.repository = repository;
+    }
+
+    /**
 	 * Updates the stock for all line items contained in the order.
 	 */
-	public void updateStock() {
-
+	public void updateStock(Order order) {
+		// implementation omitted
 	}
 }

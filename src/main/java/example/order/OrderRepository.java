@@ -15,13 +15,17 @@
  */
 package example.order;
 
-import example.order.Order.OrderIdentifier;
+import example.order.Order.OrderId;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Oliver Drotbohm
  */
-interface OrderRepository extends CrudRepository<Order, OrderIdentifier> {
+@Repository
+interface OrderRepository {
+
+    void save(Order order);
 
 }

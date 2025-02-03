@@ -16,9 +16,9 @@
 package example.order;
 
 import example.customer.Customer;
-import example.customer.Customer.CustomerIdentifier;
+import example.customer.Customer.CustomerId;
 import example.order.Order.LineItem.LineItemId;
-import example.order.Order.OrderIdentifier;
+import example.order.Order.OrderId;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
@@ -31,31 +31,22 @@ import org.jmolecules.ddd.types.Association;
 import org.jmolecules.ddd.types.Entity;
 import org.jmolecules.ddd.types.Identifier;
 
-/**
- * @author Oliver Drotbohm
- */
 @Getter
-@Table(name = "MyOrder")
-public class Order implements AggregateRoot<Order, OrderIdentifier> {
+public class Order {
 
-	private final OrderIdentifier id;
-	private final Association<Customer, CustomerIdentifier> customer;
+	private final OrderId id;
+	private final CustomerId customer;
 	private Status status;
-
 	private final List<LineItem> lineItems = new ArrayList<>();
 
-	public Order(CustomerIdentifier customerId) {
-
-		this.id = new OrderIdentifier(UUID.randomUUID());
+	public Order(CustomerId customerId) {
+		this.id = new OrderId(UUID.randomUUID());
 		this.status = Status.OPEN;
-		this.customer = Association.forId(customerId);
+		this.customer = customerId;
 	}
 
-	Order complete() {
-
+	void complete() {
 		this.status = Status.COMPLETED;
-
-		return this;
 	}
 
 	Order add(LineItem item) {
@@ -65,18 +56,18 @@ public class Order implements AggregateRoot<Order, OrderIdentifier> {
 		return this;
 	}
 
-	public record OrderIdentifier(UUID id) implements Identifier {}
+	public record OrderId(UUID id) implements Identifier {}
 
 	enum Status {
 		OPEN, COMPLETED, CANCELLED;
 	}
 
 	@Getter
-	static class LineItem implements Entity<Order, LineItemId> {
+	static class LineItem {
 
-		private LineItemId id;
-		private String description;
-		private long amount;
+		private final LineItemId id;
+		private final String description;
+		private final long amount;
 
 		LineItem(String description, long amount) {
 
