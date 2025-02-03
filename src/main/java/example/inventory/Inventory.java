@@ -17,6 +17,8 @@ package example.inventory;
 
 import example.order.Order;
 
+import example.order.OrderCompleted;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,7 +37,8 @@ public class Inventory {
     /**
 	 * Updates the stock for all line items contained in the order.
 	 */
-	public void updateStock(Order order) {
+	@EventListener
+	public void updateStock(OrderCompleted order) {
 		// implementation omitted
 	}
 }

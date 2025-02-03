@@ -45,8 +45,9 @@ public class Order {
 		this.customer = customerId;
 	}
 
-	void complete() {
+	OrderCompleted complete() {
 		this.status = Status.COMPLETED;
+		return new OrderCompleted(this.id);
 	}
 
 	Order add(LineItem item) {

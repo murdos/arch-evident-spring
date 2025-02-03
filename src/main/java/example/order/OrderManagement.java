@@ -15,32 +15,28 @@
  */
 package example.order;
 
-import example.inventory.Inventory;
-import example.notifications.NotificationService;
 import jakarta.transaction.Transactional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderManagement {
 
 	private final OrderRepository orders;
-	private final Inventory inventory;
-	private final NotificationService notificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    OrderManagement(OrderRepository orders, Inventory inventory, NotificationService notificationService) {
+    OrderManagement(OrderRepository orders, ApplicationEventPublisher eventPublisher) {
         this.orders = orders;
-        this.inventory = inventory;
-        this.notificationService = notificationService;
+        this.eventPublisher = eventPublisher;
     }
 
 	@Transactional
 	public void complete(Order order) {
-		order.complete();
+		OrderCompleted event = order.complete();
 
 		orders.save(order);
 
-		inventory.updateStock(order);
-		notificationService.sendPendingShipmentMail(order);
+		eventPublisher.publishEvent(event);
 	}
 }
